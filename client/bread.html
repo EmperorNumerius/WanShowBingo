@@ -77,6 +77,17 @@
           </div>
         </div>
        </footer>
+	<script>
+	function download(format) {
+  		var link = document.createElement('a');
+ 	 	link.download = 'filename.' + format;
+  		link.href = document.getElementById('myCanvas').toDataURL('image/' + format);
+  		link.click();
+	}
+	</script>
+	<button onclick="download('png')">Download PNG</button>
+	<button onclick="download('jpg')">Download JPG</button>
+
        <script>
         window.onload = function() {
           if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
