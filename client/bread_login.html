@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <title>WAN SHOW BINGO!</title>
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./resources/css/style-bread.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/resources/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources//images/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/resources/images/favicon.ico">
+    <link rel="manifest" href="/images/site.webmanifest">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/websocket/1.0.34/ws.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+    <script src ="./resources/js/script-rev2.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+      .sheet-link {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #c13e05;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+  
+      .sheet-link:hover {
+        background-color: #ff8c5a;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+        <div class="nav-container">
+          <div class="nav-links">
+            <a href="https://github.com/brocksexton/WanShowBingo" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://wanshow.bingo/leaderboards.html"><i class="fa-solid fa-trophy"></i> Leaderboards</a>
+            <a href="https://discord.gg/pWS5mw7jFz" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+            <a href="https://status.wanshow.bingo/" target="_blank"><i class="fa-solid fa-signal"></i> Status Page</a>
+	    <a href='https://forms.gle/h4soWjLscwzyyVZ2A'><i class="fa-regular fa-message"></i></a>
+          </div>
+          <div class="nav-login">
+            <a href="#"><i class="fa-regular fa-user" target="_blank"></i> Login</a>
+          </div>
+        </div>
+      </nav>
+    <div id="back-img"></div>
+    <div id="bodyWrapper">
+      <div id="game">
+        <div class="title"><img src="./resources/images/wanshowbingo-bread.png" width="25%" alt="WAN Show Bingo!"></div>
+        <p class="user-count" id="live-users"></p>
+	&nbsp;
+        <div id="board">
+        </div>
+	&nbsp;
+        <!--<p class="user-count" id="max-users"></p>-->      
+        <a href="https://blog.bksn.pro/ltx-wan"><p>500~ Concurrent Live Users @ WAN Show LTX on July 29, 2023 - Read More</p></a>
+        <p>Don't refresh, the card is auto generated each time!</p>
+        <p>View The <a href="team.html" target="_blank">Team</a></p>
+        <a href="https://sheet.wanshow.bingo/" target="_blank" class="sheet-link">View Google Sheet</a>
+      </div>
+     <div id="whenplane">
+      <div id="wan-show-timer"></div>
+    </div>  
+       <footer class="footer">
+        <div class="container footer-container">
+          <div class="footer-links">
+            <a href="terms.html" target="_blank">Terms and Conditions</a>
+            <a href="privacy.html" target="_blank">Privacy Policy</a>
+          </div>
+          <div class="footer-copyright">
+            &copy; 2023 Wanshow.bingo. All rights reserved.
+            Not affiliated with <a href="https://www.linusmediagroup.com/">Linus Media Group.</a>
+          </div>
+        </div>
+       </footer>
+    <button onclick="capture()">Capture and Download</button>
+    <script>
+      function capture() {
+        html2canvas(document.body).then(function(canvas) {
+          var link = document.createElement('a');
+          link.download = 'webpage.png';
+          link.href = canvas.toDataURL();
+          link.click();
+        });
+      }
+    </script>
+       <script>
+        window.onload = function() {
+          if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            var viewport = document.querySelector('meta[name="viewport"]');
+            if (window.innerWidth / window.innerHeight > 1) {
+              viewport.setAttribute('content', 'width=device-width, initial-scale=0.1, maximum-scale=0.1, user-scalable=0');
+            } else {
+              viewport.setAttribute('content', 'width=device-width, initial-scale=0.6, maximum-scale=0.6, user-scalable=0');
+            }
+          }
+        
+          Swal.fire({
+            title: 'Welcome to WAN Show Bingo!',
+            text: 'This is a randomly generated bingo card dedicated to the LTT Podcast called WAN Show, work-in-progress and not affiliated with Linus Media Group. Overhaul underway.',
+            imageUrl: 'https://wanshow.bingo/resources/images/wanshowbingo-b.png',
+            imageAlt: 'WAN Show Bingo logo',
+            showCancelButton: true,
+            confirmButtonText: 'Blog (Latest Updates)',
+            cancelButtonText: 'Feedback',
+            showCloseButton: true,
+            reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = 'https://blog.bksn.pro/category/wan/';
+            } else if (result.isDismissed && result.dismiss === Swal.DismissReason.cancel) {
+              window.location.href = 'https://feedback.bksn.pro/index.php?r=survey/index&sid=579673&lang=en';
+            }
+          });
+        }
+        </script>
+        <script>
+          $(document).ready(function() {
+            function updateTimer(data) {
+              var timerHtml = '<a href="https://whenplane.com/" target="_blank" style="text-decoration: none; color: inherit;">';
+              timerHtml += '<div class="card p-4 inline-block countdown-box text-left svelte-1xheok0">';
+              var now = new Date();
+              var wanTime = new Date(data.nextWan);
+        
+              if ((data.isLive.twitch.isLive && data.isLive.twitch.isWAN) || (data.isLive.youtube.isLive && data.isLive.youtube.isWAN)) {
+                var startedTime = new Date(data.isLive.twitch.started || data.isLive.youtube.started);
+                var liveDuration = now - startedTime;
+                timerHtml += '<h2>The WAN show has been live for ' + formatDuration(liveDuration) + '</h2>';
+                timerHtml += '<p>Started at ' + startedTime.toLocaleTimeString() + '</p>';
+              } else if (now < wanTime) {
+                var countdownDuration = wanTime - now;
+                timerHtml += '<h2>The WAN Show starts in ' + formatDuration(countdownDuration) + '</h2>';
+              } else {
+                var lateDuration = now - wanTime;
+                timerHtml += '<h2>' + (lateDuration > 0 ? 'WAN Show is Late by: ' : 'The WAN Show is offline') + formatDuration(Math.abs(lateDuration)) + '</h2>';
+              }
+        
+              timerHtml += '<p class="provider-text">Provided by WhenPlane.com</p>';
+              timerHtml += '</div></a>';
+              $('#wan-show-timer').html(timerHtml);
+            }
+        
+            function formatDuration(duration) {
+              var days = Math.floor(duration / 86400000);
+              var hours = Math.floor((duration % 86400000) / 3600000);
+              var minutes = Math.floor((duration % 3600000) / 60000);
+              var seconds = Math.floor((duration % 60000) / 1000);
+              return (days > 0 ? days + 'd ' : '') + hours + 'h ' + minutes + 'm ' + seconds + 's';
+            }
+        
+            function fetchTimer() {
+              $.get('https://socket.wanshow.bingo/whenplane', function(data) {
+                updateTimer(data);
+              }).fail(function() {
+                console.error('An error occurred while fetching the timer.');
+              });
+            }
+        
+            fetchTimer();
+        
+            setInterval(fetchTimer, 1000); // Update every second, timer may abruptly change when a new response is received from the server
+          });
+        </script>                                                      
+  </body>
+</html>
