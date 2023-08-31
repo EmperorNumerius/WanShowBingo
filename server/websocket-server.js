@@ -88,12 +88,10 @@ fetch('https://discord.com/api/users/@me', {
 })
 .then(result => result.json())
 .then(response => {
-    //handle response
+
 })
 .catch(console.error);
 const { username, discriminator, avatar, id} = response;
-//set the welcome username string
 document.getElementById('name').innerText = ` ${username}#${discriminator}`;
 
-//set the avatar image by constructing a url to access discord's cdn
 document.getElementById("avatar").src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`;
