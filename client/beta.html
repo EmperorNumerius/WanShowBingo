@@ -17,10 +17,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
     <script src ="./resources/js/script-rev3.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-      /* Style for the theme buttons */
       button {
-        padding: 8px 16px;
         background-color: #c13e05;
         color: #ffffff;
         border: none;
@@ -30,40 +29,54 @@
       }
 
       button:hover {
-        background-color: #ff8c5a;
+        background-color: #ffffff00;
       }
 
       .sheet-link {
         display: inline-block;
-        padding: 8px 16px;
+        /*padding: 8px 16px;*/
         background-color: #c13e05;
         color: #ffffff;
         text-decoration: none;
-        border-radius: 4px;
         transition: background-color 0.3s;
-      }
-  
-      .sheet-link:hover {
-        background-color: #ff8c5a;
       }
 
-      .refreshButton {
-        display: inline-block;
-        padding: 8px 16px;
-        background-color: #c13e05;
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background-color 0.3s;
+      .logo-refresh-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px; /* Add some space between the logo and the rest of the content */
       }
-  
-      .refreshButton:hover {
-        background-color: #ff8c5a;
+
+      .title img {
+        max-width: 25%;
+        padding-left: 26px;
+      }
+
+      /* Style for the refresh icon */
+      .refresh-icon {
+        margin-right: 12px;
+        font-size: 20px;
+      }
+
+      /* Apply spinning animation to the icon on hover */
+      .refreshButton:hover .refresh-icon {
+        animation: spin 1s infinite linear;
+      }
+
+      /* Keyframes animation for spinning */
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       .item.clicked {
-        background-color: #ffffff00; /* Change this to your desired background color */
-        color: #fff; /* Change this to your desired text color */
+        background-color: #ffffff00;
+        color: #fff;
       }
 
       /* Original Theme Styles */
@@ -79,41 +92,48 @@
   </head>
   <body class="original-theme">
     <nav>
-        <div class="nav-container">
-          <div class="nav-links">
-            <a href="https://github.com/brocksexton/WanShowBingo" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-            <a href="https://wanshow.bingo/leaderboards.html"><i class="fa-solid fa-trophy"></i> Leaderboards</a>
-            <a href="https://discord.gg/pWS5mw7jFz" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-            <a href="https://status.wanshow.bingo/" target="_blank"><i class="fa-solid fa-signal"></i> Status Page</a>
-          </div>
-          <select id="themeSelector">
-            <option value="original">Original</option>
-            <option value="bread">Bread</option>
-            <option value="ltx23">LTX2023</option>
-            <option value="afterdark">After Dark</option>
-            <option value="darkmode">Dark Mode</option>
-            <option value="lightmode">Light Mode</option>
-          </select>          
-          <div class="nav-login">
-            <a href="#"><i class="fa-regular fa-user" target="_blank"></i> Login</a>
-          </div>
+      <div class="nav-container">
+        <div class="nav-links">
+          <a href="https://github.com/brocksexton/WanShowBingo" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+          <a href="https://wanshow.bingo/leaderboards.html"><i class="fa-solid fa-trophy"></i> Leaderboards</a>
+          <a href="https://discord.gg/pWS5mw7jFz" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+          <a href="https://status.wanshow.bingo/" target="_blank"><i class="fa-solid fa-signal"></i> Status Page</a>
+          <a href="https://sheet.wanshow.bingo/" target="_blank"><i class="fa-solid fa-table"></i> Google Sheet</a>
         </div>
-      </nav>
+        <!--<label for="themeSelector" class="theme-selector-label">Select Theme:</label>-->
+        <select id="themeSelector">
+          <option value="original">Original</option>
+          <option value="bread">Bread</option>
+          <option value="ltx23">LTX2023</option>
+          <option value="afterdark">After Dark</option>
+          <option value="darkmode">Dark Mode</option>
+          <option value="lightmode">Light Mode</option>
+        </select> 
+        <div class="nav-login">
+          <a href="#"><i class="fa-regular fa-user" target="_blank"></i> Login</a>
+        </div>
+      </div>
+    </nav>
     <div id="back-img"></div>
     <div id="bodyWrapper">
       <div id="game">
-        <div class="title"><img src="./resources/images/wanshowbingo-w.png" width="25%" alt="WAN Show Bingo!"></div>
+        <div class="logo-refresh-container">
+          <div class="title">
+            <img src="./resources/images/wanshowbingo-w.png" width="25%" alt="WAN Show Bingo!">
+          </div>
+          <button id="refreshButton" class="refreshButton">
+            <a class="sheet-link"><i class="fas fa-sync-alt refresh-icon"></i></a>
+          </button>
+        </div>
         <p class="user-count" id="live-users"></p>
 	&nbsp;
         <div id="board">
         </div>
 	&nbsp;
-        <!--<p class="user-count" id="max-users"></p>-->      
-        <a href="https://blog.bksn.pro/ltx-wan"><p>500~ Concurrent Live Users @ WAN Show LTX on July 29, 2023 - Read More</p></a>
-        <!-- Add this button element -->
-        <button id="refreshButton"><a class="sheet-link">Refresh Bingo Card</a></button>
-        <a href="https://sheet.wanshow.bingo/" target="_blank" class="sheet-link">View Google Sheet</a>
-        <p>View The <a href="team.html" target="_blank">Team</a></p>
+        <a href="https://blog.bksn.pro/ltx-wan"><p class="user-count" id="max-users"></p></a>     
+        <!--<a href="https://blog.bksn.pro/ltx-wan"><p>500~ Concurrent Live Users @ WAN Show LTX on July 29, 2023 - Read More</p></a>-->
+        <p class="the-team">View The <a href="team.html" target="_blank">Team</a></p>
+        <button onclick="capture()">Capture and Download Screenshot</button>
       </div>
      <div id="whenplane">
       <div id="wan-show-timer"></div>
@@ -161,6 +181,31 @@
         }
         </script>
         <script>
+          function capture() {
+            // Get the specific element you want to capture
+            var elementToCapture = document.getElementById('game');
+          
+            // Hide the elements you want to exclude from the screenshot
+            var elementsToHide = elementToCapture.querySelectorAll('.refreshButton, .user-count, .the-team, button');
+            elementsToHide.forEach(function(element) {
+              element.style.display = 'none';
+            });
+          
+            // Use html2canvas to capture the modified element
+            html2canvas(elementToCapture).then(function(canvas) {
+              // Show the hidden elements again
+              elementsToHide.forEach(function(element) {
+                element.style.display = '';
+              });
+          
+              var link = document.createElement('a');
+              link.download = 'wanshowbingo.png';
+              link.href = canvas.toDataURL();
+              link.click();
+            });
+          }
+        </script>
+        <script>
           $(document).ready(function() {
             function updateTimer(data) {
               var timerHtml = '<a href="https://whenplane.com/" target="_blank" style="text-decoration: none; color: inherit;">';
@@ -206,6 +251,16 @@
         
             setInterval(fetchTimer, 1000); // Update every second, timer may abruptly change when a new response is received from the server
           });
+        </script>
+        <script>
+        // Toggle the hamburger menu
+        $(document).ready(function() {
+            $('.hamburger-icon').click(function() {
+            $('.hamburger-menu').toggleClass('open');
+            $('.menu').slideToggle();
+          });
+        });
         </script>                                                      
   </body>
 </html>
+

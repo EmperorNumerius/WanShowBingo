@@ -57,3 +57,9 @@ socket.io/
 bottle/
 
 .idea/
+server/websocket-server.js
+server/maxuserapi.js
+server/whenplane.mjs
+server/discordauth.js
+server/leaderboard-stats.js
+server/runserver.js

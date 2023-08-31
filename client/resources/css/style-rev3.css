@@ -37,6 +37,51 @@ nav {
   background-color: #333;
 }
 
+/* Style for the hamburger menu */
+/*.hamburger-menu {
+  display: none; /* Hide the menu by default */
+  /*position: relative;
+  cursor: pointer;
+}
+
+/* Style for the open state of the hamburger icon */
+/*.hamburger-menu.open .bar:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger-menu.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.open .bar:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Style for the menu items */
+.menu {
+  display: none;
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.menu a {
+  display: block;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.menu a:hover {
+  background-color: #ddd;
+}
+
 .nav-container {
   display: flex;
   justify-content: space-between;
@@ -62,6 +107,23 @@ nav {
   text-decoration: none;
   font-size: 18px;
 }
+
+/* Apply styles to the theme selector dropdown */
+#themeSelector {
+  background-color: #d2480c;
+  border: 1px solid #9a3206;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+/* Apply styles to the label of the theme selector dropdown */
+.theme-selector-label {
+  font-weight: bold;
+  color: #ffffff;
+}
+
 
 @keyframes typing {
   from {
@@ -487,5 +549,15 @@ a:hover {
   #nav-container {
     transform: scale(0.65); /* Scale down to 80% on even smaller screens */
     transform-origin: center; /* Added to scale from the center */
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger-menu {
+    display: block;
   }
 }

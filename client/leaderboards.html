@@ -1,44 +1,382 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <link href="https://fonts.googleapis.com/css?family=Neucha" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/resources/css/style-rev2.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-    <link rel="manifest" href="/images/site.webmanifest">
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+  <title>Leaderboards - WAN SHOW BINGO!</title>
+  <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./resources/css/style-rev3.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="/resources/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/resources/images/favicon-16x16.png">
+  <link rel="icon" type="image/x-icon" href="/resources/images/favicon.ico">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<style>
+  * {
+    font-family: 'Dosis', sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
-    <meta charset="utf-8">
-    <title>WAN SHOW BINGO - Under Construction</title>
-    <style>
-      body {
-        background-color: #f2f2f2;
-        font-family: 'Neucha', sans-serif;
-        text-align: center;
-        margin: 0;
-        padding: 0;
+  body {
+    background-image: url("https://wanshow.bingo/resources/images/helloworld.jpeg");
+    position: relative;
+    z-index: -1;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    height: 60px;
+    padding: 0 20px;
+  }
+
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 18px;
+  }
+
+  #themeSelector {
+    background-color: #d2480c;
+    border: 1px solid #9a3206;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: #ffffff;
+  }
+
+  .leaderboard {
+    background-color: #c13e05;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    margin: 30px auto;
+    max-width: 1200px;
+  }
+
+  h1 {
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  h2 {
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #333;
+    color: white;
+  }
+
+  td {
+    background-color: #cdcdcd;
+    color: rgb(0, 0, 0);
+  }
+
+  tr:nth-child(even) {
+    background-color: #f5f5f5;
+  }
+
+  .footer {
+    padding: 1rem 0;
+    color: #f2f2f2;
+    margin-top: 30px;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+  }
+
+  .footer-links a {
+    color: #f2f2f2;
+    text-decoration: none;
+    margin-right: 1rem;
+  }
+
+  .footer-links a:hover {
+    color: #e0e0e0;
+  }
+
+  .footer-copyright {
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    .leaderboard {
+      margin: 20px 10px;
+    }
+
+    .footer-container {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+    background-color: #fff;
+  }
+
+  .profile-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+ .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    display: none;
+  }
+
+.alert-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .overlay,
+  .alert-message {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.alert-message .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.iframe-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+}
+
+.iframe-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+</style>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="https://github.com/brocksexton/WanShowBingo" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a href="https://wanshow.bingo/leaderboards.html"><i class="fa-solid fa-trophy"></i> Leaderboards</a>
+      <a href="https://discord.gg/pWS5mw7jFz" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+      <a href="https://status.wanshow.bingo/" target="_blank"><i class="fa-solid fa-signal"></i> Status Page</a>
+      <a href="https://sheet.wanshow.bingo/" target="_blank"><i class="fa-solid fa-table"></i> Google Sheet</a>
+    </div>
+    <select id="themeSelector">
+      <option value="original">Original</option>
+      <option value="bread">Bread</option>
+      <option value="ltx23">LTX2023</option>
+      <option value="afterdark">After Dark</option>
+      <option value="darkmode">Dark Mode</option>
+      <option value="lightmode">Light Mode</option>
+    </select>
+  </nav>
+
+  <!-- Leaderboard section -->
+  <main>
+    <section class="leaderboard">
+      <h1>Leaderboards</h1>
+      <div class="top-wins">
+        <h2>Top Verified Wins</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Profile Picture</th>
+            <th>Username/Discord</th>
+            <th>Rank</th>
+            <th>Wins</th>
+          </tr>
+        </thead>
+        <tbody id="topWinsList">
+          <!-- Fetched top win leaderboard will be added here dynamically -->
+        </tbody>
+      </table>
+    </div>
+      <div class="top-discord">
+        <h2>Top Discord Users (by Level)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Profile Picture</th>
+                    <th>Username/Discord</th>
+                    <th>Level</th>
+                </tr>
+            </thead>
+            <tbody id="discordUsersList">
+                <!-- Fetched Discord Users leaderboard will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <div class="top-dates">
+      <h2>Top Played Dates</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Users</th>
+          </tr>
+        </thead>
+        <tbody id="topDatesList">
+          <!-- Fetched Max User Dates leaderboard will be added here dynamically -->
+        </tbody>
+      </table>
+    </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-links">
+        <a href="terms.html" target="_blank">Terms and Conditions</a>
+        <a href="privacy.html" target="_blank">Privacy Policy</a>
+      </div>
+      <div class="footer-copyright">
+        &copy; 2023 Wanshow.bingo. All rights reserved.
+        Not affiliated with <a href="https://www.linusmediagroup.com/">Linus Media Group.</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mee6 Discord Leaderbaord -->
+  <script>
+    $(document).ready(function() {
+        // Fetch leaderboard data
+        $.get('./resources/php/mee6.php', function(data) {
+            try {
+                const parsedData = JSON.parse(data); // Parse the JSON data
+                const discordUsersList = $('#discordUsersList');
+                
+                for (let i = 0; i < 5 && i < parsedData.length; i++) {
+                    const user = parsedData[i];
+                    const avatarUrl = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpg` : './resources/images/default-avatar-discord.jpg';
+                    const listItem = `<tr>
+                                        <td><img class="profile-image" src="${avatarUrl}" alt="Profile Image"></td>
+                                        <td class="centered">
+                                        <a href="https://discord.gg/pWS5mw7jFz">
+                                        <center>
+                                          <div class="discord-banner">
+                                            <div class="discord-icon"><i class="fab fa-discord"></i></div>
+                                              <div class="discord-tag">
+                                                ${user.username}
+                                              </div>
+                                            </div>
+                                          </center>
+                                          </a>
+                                        </td>
+                                        <td>${user.level}</td>
+                                      </tr>`;
+                    discordUsersList.append(listItem);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON data:', error);
+                const discordUsersList = $('#discordUsersList');
+                discordUsersList.append('<tr><td colspan="4">Error parsing or processing Discord Users leaderboard data.</td></tr>');
+            }
+        }).fail(function() {
+            // Show error if fetching data fails
+            const discordUsersList = $('#discordUsersList');
+            discordUsersList.append('<tr><td colspan="4">Error fetching Discord Users leaderboard.</td></tr>');
+        });
+    });
+    </script>        
+
+  <!-- maxUsers & Top Wins -->
+  <script>
+    $(document).ready(function() {
+      // Function to format dates in "Month Day, Year" format
+      function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
       }
-      h1 {
-        font-size: 4rem;
-        margin-top: 10rem;
-        color: #333;
-      }
-      p {
-        font-size: 2rem;
-        color: #666;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="title"><img src="/resources/images/wanshowbingo-b.png" width="25%" alt="WAN Show Bingo!"></div>
-    <p class="user-count" id="live-users"></p>
-    <p class="user-count" id="max-users"></p>
-    <h1>Under Construction</h1>
-    <p>We're currently working on updating our website, accounts & statistics will be available in the future!</p>
-  </body>
+
+      // Fetch data and populate tables
+      $.get('https://socket.wanshow.bingo/maxUsers', function(data) {
+        // Populate the top played dates
+        const topDatesList = $('#topDatesList');
+        data.topPlayedDates.forEach(dateInfo => {
+          const formattedDate = formatDate(dateInfo.date);
+          const listItem = `<tr>
+                              <td>${formattedDate}</td>
+                              <td>${dateInfo.users} Users</td>
+                            </tr>`;
+          topDatesList.append(listItem);
+        });
+
+        // Create a sample top win leaderboard
+        const topWinsList = $('#topWinsList');
+        for (let i = 1; i <= 5; i++) {
+          const listItem = `<tr>
+                              <td><img class="profile-image" src="./resources/images/default-avatar-discord.jpg" alt="Profile Image"></td>
+                              <td>User ${i}</td>
+                              <td>${i}</td>
+                              <td>0 Wins</td>
+                            </tr>`;
+          topWinsList.append(listItem);
+        }
+      }).fail(function() {
+        // Show error if fetching data fails
+        const topDatesList = $('#topDatesList');
+        topDatesList.append('<tr><td colspan="2">Error fetching top played dates.</td></tr>');
+
+        const topWinsList = $('#topWinsList');
+        topWinsList.append('<tr><td colspan="4">Error fetching top win leaderboard.</td></tr>');
+      });
+    });
+  </script>
+</body>
 </html>
